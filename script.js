@@ -157,10 +157,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const phone = $('#phone', form);
       const message = $('#message', form);
       if (!service || !date || !time || !name || !phone || !message) return;
+      
       if (!service.value || !date.value || !time.value || !name.value.trim() || !phone.value.trim()) {
+        /* Highlight the custom time picker if time is missing, since it's a hidden input */
+        if (!time.value) {
+          const timeFieldBtn = $('#timeField');
+          if (timeFieldBtn) {
+            timeFieldBtn.classList.add('is-error');
+            timeFieldBtn.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'center' });
+          }
+        }
         form.reportValidity();
         return;
       }
+
       const text =
 `Hello The Scissors Clip & Spa,
 I would like to book an appointment.
@@ -171,7 +181,8 @@ NAME: ${name.value.trim()}
 PHONE: ${phone.value.trim()}
 ADDITIONAL MESSAGE: ${message.value.trim() || 'None'}
 Please confirm my booking.`;
-      const whatsappNumber = '254702715038';
+
+      const whatsappNumber = '254727473750';
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
       window.open(whatsappUrl, '_blank', 'noopener');
     });
@@ -216,4 +227,47 @@ Please confirm my booking.`;
     if (year) year.textContent = new Date().getFullYear();
   })();
 
-});
+    /* 12. CUSTOM TIME PICKER (hour | minute | AM/PM wheels) */
+  (() => {
+    const picker = $('#timepicker');
+    if (!picker) return;
+
+    const field = $('#timeField', picker);
+    const panel = $('#timePanel', picker);
+    const valueEl = $('#timeValue', picker);
+    const hidden = $('#time'); // Fixed: searches the whole document for #time
+    
+    if (!field || !panel || !valueEl || !hidden) return;
+
+    const state = { hour: '8', minute: '00', ampm: 'AM' };
+    const compose = () => `${state.hour}:${state.minute} ${state.ampm}`;
+
+    const togglePanel = open => {
+      panel.hidden = !open;
+      field.setAttribute('aria-expanded', String(open));
+    };
+
+    field.addEventListener('click', () => togglePanel(panel.hidden));
+
+    panel.querySelectorAll('.timepicker__opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const col = opt.closest('.timepicker__col');
+        col.querySelectorAll('.timepicker__opt').forEach(o => o.classList.remove('is-selected'));
+        opt.classList.add('is-selected');
+        state[col.dataset.col] = opt.dataset.value;
+        hidden.value = compose();
+        valueEl.textContent = compose();
+        field.classList.add('has-value');
+        field.classList.remove('is-error');
+      });
+    });
+
+    document.addEventListener('click', event => {
+      if (!picker.contains(event.target)) togglePanel(false);
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') togglePanel(false);
+    });
+  })();
+  });

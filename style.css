@@ -294,3 +294,21 @@ body.menu-open { overflow: hidden; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
+
+/* CUSTOM TIME PICKER */
+.timepicker { position: relative; }
+.timepicker__field { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; padding: 13px 16px; color: var(--text); cursor: pointer; transition: border-color var(--dur-fast) var(--ease-soft), box-shadow var(--dur-fast) var(--ease-soft); }
+.timepicker__field:focus-visible { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.15); }
+.timepicker__field.is-error { border-color: #FF5C5C; box-shadow: 0 0 0 3px rgba(255,92,92,0.15); }
+.timepicker__value { color: rgba(201,201,201,0.5); }
+.timepicker__field.has-value .timepicker__value { color: var(--text); }
+.timepicker__chev { width: 16px; height: 16px; color: var(--gold); flex-shrink: 0; }
+.timepicker__panel { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 700; background: #1A1A1A; border: 1px solid var(--border-hairline); border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: grid; grid-template-columns: 1fr 1fr 0.8fr; overflow: hidden; }
+.timepicker__panel[hidden] { display: none; }
+.timepicker__col { max-height: 180px; overflow-y: auto; border-right: 1px solid rgba(255,255,255,0.06); scrollbar-width: thin; scrollbar-color: var(--gold) transparent; }
+.timepicker__col:last-child { border-right: 0; }
+.timepicker__col::-webkit-scrollbar { width: 4px; }
+.timepicker__col::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+.timepicker__opt { padding: 10px 8px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); cursor: pointer; transition: background 0.2s, color 0.2s; }
+.timepicker__opt:hover { background: rgba(212,175,55,0.08); color: var(--text); }
+.timepicker__opt.is-selected { background: var(--gold); color: #14110A; font-weight: 700; }
